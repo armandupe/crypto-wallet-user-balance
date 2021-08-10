@@ -13,55 +13,25 @@ export default new Vuex.Store({
     balanceRUR: 0,
     balanceBNB: 0,
   },
-  // getters: {
-  //   getBalance: (state) => {
-  //     return state.balance;
-  //   },
-  // },
+  getters: {
+    getAllBalances: (state) => {
+      return state;
+    },
+  },
   mutations: {
-    increaseCurrencyBalanceBTS(state, payload) {
-      state.balanceBTS = payload;
-    },
-    increaseCurrencyBalanceUSD(state, payload) {
-      state.balanceUSD = payload;
-    },
-    increaseCurrencyBalanceDOGE(state, payload) {
-      state.balanceDOGE = payload;
-    },
-    increaseCurrencyBalanceLTC(state, payload) {
-      state.balanceLTC = payload;
-    },
-    increaseCurrencyBalanceSHIB(state, payload) {
-      state.balanceSHIB = payload;
-    },
-    increaseCurrencyBalanceRUR(state, payload) {
-      state.balanceRUR = payload;
-    },
-    increaseCurrencyBalanceBNB(state, payload) {
-      state.balanceBNB = payload;
+    increaseCurrencyBalance(state, payload) {
+      state.balanceBTS = payload.BTS;
+      state.balanceUSD = payload.USD;
+      state.balanceDOGE = payload.DOGE;
+      state.balanceLTC = payload.LTC;
+      state.balanceSHIB = payload.SHIB;
+      state.balanceRUR = payload.RUR;
+      state.balanceBNB = payload.BNB;
     },
   },
   actions: {
-    increaseBalanceBTS({ commit }, val) {
-      commit("increaseCurrencyBalanceBTS", val);
-    },
-    increaseBalanceUSD({ commit }, val) {
-      commit("increaseCurrencyBalanceUSD", val);
-    },
-    increaseBalanceDOGE({ commit }, val) {
-      commit("increaseCurrencyBalanceDOGE", val);
-    },
-    increaseBalanceLTC({ commit }, val) {
-      commit("increaseCurrencyBalanceLTC", val);
-    },
-    increaseBalanceSHIB({ commit }, val) {
-      commit("increaseCurrencyBalanceSHIB", val);
-    },
-    increaseBalanceRUR({ commit }, val) {
-      commit("increaseCurrencyBalanceRUR", val);
-    },
-    increaseBalanceBNB({ commit }, val) {
-      commit("increaseCurrencyBalanceBNB", val);
+    increaseBalance({ commit }, val) {
+      commit("increaseCurrencyBalance", val);
     },
   },
 });

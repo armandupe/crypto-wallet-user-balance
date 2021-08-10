@@ -285,47 +285,69 @@ export default {
     const addToBalance = () => {
       const input = document.querySelector(".form-add__input-value input");
       const submit = document.querySelector(".form-add__submit");
-      const allBalances = document.querySelectorAll(".currency-balance");
 
       submit.addEventListener("click", () => {
-        allBalances.forEach((balance) => {
-          if (balance.id === "BTS" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let result = currentBalance + +input.value - (input.value / 100) * 5;
-            balance.textContent = result.toFixed(4);
-            this.$store.dispatch("increaseBalanceBTS", +balance.textContent);
-          } else if (balance.id === "USD" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let result = currentBalance + +input.value - (input.value / 100) * 5;
-            balance.textContent = result.toFixed(4);
-            this.$store.dispatch("increaseBalanceUSD", +balance.textContent);
-          } else if (balance.id === "DOGE" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let result = currentBalance + +input.value - 0.5;
-            balance.textContent = result.toFixed(4);
-            this.$store.dispatch("increaseBalanceDOGE", +balance.textContent);
-          } else if (balance.id === "LTC" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let result = currentBalance + +input.value - 0.5;
-            balance.textContent = result.toFixed(4);
-            this.$store.dispatch("increaseBalanceLTC", +balance.textContent);
-          } else if (balance.id === "SHIB" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let result = currentBalance + +input.value - 10;
-            balance.textContent = result.toFixed(4);
-            this.$store.dispatch("increaseBalanceSHIB", +balance.textContent);
-          } else if (balance.id === "RUR" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let result = currentBalance + +input.value;
-            balance.textContent = result.toFixed(4);
-            this.$store.dispatch("increaseBalanceRUR", +balance.textContent);
-          } else if (balance.id === "BNB" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let result = currentBalance + +input.value - 0.01;
-            balance.textContent = result.toFixed(4);
-            this.$store.dispatch("increaseBalanceBNB", +balance.textContent);
-          }
-        });
+        let payload = {
+          BTS: 0,
+          USD: 0,
+          DOGE: 0,
+          LTC: 0,
+          SHIB: 0,
+          RUR: 0,
+          BNB: 0,
+        };
+        const balanceBTS = document.querySelector(".currency-balance#BTS");
+        const balanceUSD = document.querySelector(".currency-balance#USD");
+        const balanceDOGE = document.querySelector(".currency-balance#DOGE");
+        const balanceLTC = document.querySelector(".currency-balance#LTC");
+        const balanceSHIB = document.querySelector(".currency-balance#SHIB");
+        const balanceRUR = document.querySelector(".currency-balance#RUR");
+        const balanceBNB = document.querySelector(".currency-balance#BNB");
+
+        if (balanceBTS.id === "BTS" && balanceBTS.id === submit.id) {
+          let currentBalance = +balanceBTS.textContent;
+          let result = currentBalance + +input.value - (input.value / 100) * 5;
+          balanceBTS.textContent = result.toFixed(4);
+        }
+        payload.BTS = balanceBTS.textContent;
+        if (balanceUSD.id === "USD" && balanceUSD.id === submit.id) {
+          let currentBalance = +balanceUSD.textContent;
+          let result = currentBalance + +input.value - (input.value / 100) * 5;
+          balanceUSD.textContent = result.toFixed(4);
+        }
+        payload.USD = balanceUSD.textContent;
+        if (balanceDOGE.id === "DOGE" && balanceDOGE.id === submit.id) {
+          let currentBalance = +balanceDOGE.textContent;
+          let result = currentBalance + +input.value - 0.5;
+          balanceDOGE.textContent = result.toFixed(4);
+        }
+        payload.DOGE = balanceDOGE.textContent;
+        if (balanceLTC.id === "LTC" && balanceLTC.id === submit.id) {
+          let currentBalance = +balanceLTC.textContent;
+          let result = currentBalance + +input.value - 0.5;
+          balanceLTC.textContent = result.toFixed(4);
+        }
+        payload.LTC = balanceLTC.textContent;
+        if (balanceSHIB.id === "SHIB" && balanceSHIB.id === submit.id) {
+          let currentBalance = +balanceSHIB.textContent;
+          let result = currentBalance + +input.value - 10;
+          balanceSHIB.textContent = result.toFixed(4);
+        }
+        payload.SHIB = balanceSHIB.textContent;
+        if (balanceRUR.id === "RUR" && balanceRUR.id === submit.id) {
+          let currentBalance = +balanceRUR.textContent;
+          let result = currentBalance + +input.value;
+          balanceRUR.textContent = result.toFixed(4);
+        }
+        payload.RUR = balanceRUR.textContent;
+        if (balanceBNB.id === "BNB" && balanceBNB.id === submit.id) {
+          let currentBalance = +balanceBNB.textContent;
+          let result = currentBalance + +input.value - 0.01;
+          balanceBNB.textContent = result.toFixed(4);
+        }
+        payload.BNB = balanceBNB.textContent;
+
+        this.$store.dispatch("increaseBalance", payload);
       });
     };
     addToBalance();
