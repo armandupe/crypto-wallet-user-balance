@@ -19,7 +19,7 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    increaseCurrencyBalance(state, payload) {
+    changeCurrencyBalance(state, payload) {
       state.balanceBTS = payload.BTS;
       state.balanceUSD = payload.USD;
       state.balanceDOGE = payload.DOGE;
@@ -30,8 +30,8 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    increaseBalance({ commit }, val) {
-      commit("increaseCurrencyBalance", val);
+    changeBalance({ commit }, val) {
+      commit("changeCurrencyBalance", val);
     },
   },
 });

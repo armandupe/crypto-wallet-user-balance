@@ -347,7 +347,7 @@ export default {
         }
         payload.BNB = balanceBNB.textContent;
 
-        this.$store.dispatch("increaseBalance", payload);
+        this.$store.dispatch("changeBalance", payload);
       });
     };
     addToBalance();
@@ -355,74 +355,109 @@ export default {
     const withdrawalFromBalance = () => {
       const input = document.querySelector(".form-withdrawal__input-value input");
       const submit = document.querySelector(".form-withdrawal__submit");
-      const allBalances = document.querySelectorAll(".currency-balance");
 
       submit.addEventListener("click", () => {
-        allBalances.forEach((balance) => {
-          if (balance.id === "BTS" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let valueWithComission = +input.value - (input.value / 100) * 5;
-            if (currentBalance > valueWithComission) {
-              let result = currentBalance - valueWithComission;
-              balance.textContent = result.toFixed(4);
-            } else {
-              alert("Нельзя вывести больше чем есть на балансе!");
-            }
-          } else if (balance.id === "USD" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let valueWithComission = +input.value - (input.value / 100) * 5;
-            if (currentBalance > valueWithComission) {
-              let result = currentBalance - valueWithComission;
-              balance.textContent = result.toFixed(4);
-            } else {
-              alert("Нельзя вывести больше чем есть на балансе!");
-            }
-          } else if (balance.id === "DOGE" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let valueWithComission = +input.value - 0.5;
-            if (currentBalance > valueWithComission) {
-              let result = currentBalance - valueWithComission;
-              balance.textContent = result.toFixed(4);
-            } else {
-              alert("Нельзя вывести больше чем есть на балансе!");
-            }
-          } else if (balance.id === "LTC" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let valueWithComission = +input.value - 0.5;
-            if (currentBalance > valueWithComission) {
-              let result = currentBalance - valueWithComission;
-              balance.textContent = result.toFixed(4);
-            } else {
-              alert("Нельзя вывести больше чем есть на балансе!");
-            }
-          } else if (balance.id === "SHIB" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let valueWithComission = +input.value - 10;
-            if (currentBalance > valueWithComission) {
-              let result = currentBalance - valueWithComission;
-              balance.textContent = result.toFixed(4);
-            } else {
-              alert("Нельзя вывести больше чем есть на балансе!");
-            }
-          } else if (balance.id === "RUR" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            if (currentBalance > +input.value) {
-              let result = currentBalance - +input.value;
-              balance.textContent = result.toFixed(4);
-            } else {
-              alert("Нельзя вывести больше чем есть на балансе!");
-            }
-          } else if (balance.id === "BNB" && balance.id === submit.id) {
-            let currentBalance = +balance.textContent;
-            let valueWithComission = +input.value - 0.01;
-            if (currentBalance > valueWithComission) {
-              let result = currentBalance - valueWithComission;
-              balance.textContent = result.toFixed(4);
-            } else {
-              alert("Нельзя вывести больше чем есть на балансе!");
-            }
+        let payload = {
+          BTS: 0,
+          USD: 0,
+          DOGE: 0,
+          LTC: 0,
+          SHIB: 0,
+          RUR: 0,
+          BNB: 0,
+        };
+        const balanceBTS = document.querySelector(".currency-balance#BTS");
+        const balanceUSD = document.querySelector(".currency-balance#USD");
+        const balanceDOGE = document.querySelector(".currency-balance#DOGE");
+        const balanceLTC = document.querySelector(".currency-balance#LTC");
+        const balanceSHIB = document.querySelector(".currency-balance#SHIB");
+        const balanceRUR = document.querySelector(".currency-balance#RUR");
+        const balanceBNB = document.querySelector(".currency-balance#BNB");
+
+        if (balanceBTS.id === "BTS" && balanceBTS.id === submit.id) {
+          let currentBalance = +balanceBTS.textContent;
+          let valueWithComission = +input.value - (input.value / 100) * 5;
+          if (currentBalance > valueWithComission) {
+            let result = currentBalance - valueWithComission;
+            balanceBTS.textContent = result.toFixed(4);
+          } else {
+            alert("Нельзя вывести больше чем есть на балансе!");
           }
-        });
+        }
+        payload.BTS = balanceBTS.textContent;
+
+        if (balanceUSD.id === "USD" && balanceUSD.id === submit.id) {
+          let currentBalance = +balanceUSD.textContent;
+          let valueWithComission = +input.value - (input.value / 100) * 5;
+          if (currentBalance > valueWithComission) {
+            let result = currentBalance - valueWithComission;
+            balanceUSD.textContent = result.toFixed(4);
+          } else {
+            alert("Нельзя вывести больше чем есть на балансе!");
+          }
+        }
+        payload.USD = balanceUSD.textContent;
+
+        if (balanceDOGE.id === "DOGE" && balanceDOGE.id === submit.id) {
+          let currentBalance = +balanceDOGE.textContent;
+          let valueWithComission = +input.value - 0.5;
+          if (currentBalance > valueWithComission) {
+            let result = currentBalance - valueWithComission;
+            balanceDOGE.textContent = result.toFixed(4);
+          } else {
+            alert("Нельзя вывести больше чем есть на балансе!");
+          }
+        }
+        payload.DOGE = balanceDOGE.textContent;
+
+        if (balanceLTC.id === "LTC" && balanceLTC.id === submit.id) {
+          let currentBalance = +balanceLTC.textContent;
+          let valueWithComission = +input.value - 0.5;
+          if (currentBalance > valueWithComission) {
+            let result = currentBalance - valueWithComission;
+            balanceLTC.textContent = result.toFixed(4);
+          } else {
+            alert("Нельзя вывести больше чем есть на балансе!");
+          }
+        }
+        payload.LTC = balanceLTC.textContent;
+
+        if (balanceSHIB.id === "SHIB" && balanceSHIB.id === submit.id) {
+          let currentBalance = +balanceSHIB.textContent;
+          let valueWithComission = +input.value - 10;
+          if (currentBalance > valueWithComission) {
+            let result = currentBalance - valueWithComission;
+            balanceSHIB.textContent = result.toFixed(4);
+          } else {
+            alert("Нельзя вывести больше чем есть на балансе!");
+          }
+        }
+        payload.SHIB = balanceSHIB.textContent;
+
+        if (balanceRUR.id === "RUR" && balanceRUR.id === submit.id) {
+          let currentBalance = +balanceRUR.textContent;
+          if (currentBalance > +input.value) {
+            let result = currentBalance - +input.value;
+            balanceRUR.textContent = result.toFixed(4);
+          } else {
+            alert("Нельзя вывести больше чем есть на балансе!");
+          }
+        }
+        payload.RUR = balanceRUR.textContent;
+
+        if (balanceBNB.id === "BNB" && balanceBNB.id === submit.id) {
+          let currentBalance = +balanceBNB.textContent;
+          let valueWithComission = +input.value - 0.01;
+          if (currentBalance > valueWithComission) {
+            let result = currentBalance - valueWithComission;
+            balanceBNB.textContent = result.toFixed(4);
+          } else {
+            alert("Нельзя вывести больше чем есть на балансе!");
+          }
+        }
+        payload.BNB = balanceBNB.textContent;
+
+        this.$store.dispatch("changeBalance", payload);
       });
     };
     withdrawalFromBalance();
