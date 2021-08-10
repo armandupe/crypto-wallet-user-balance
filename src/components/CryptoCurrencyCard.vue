@@ -152,11 +152,6 @@ export default {
     ],
   }),
   methods: {
-    // increaseCurrencyBalance(val) {
-    //   this.$store.dispatch("increaseBalance", val);
-    //   document.querySelector(".currency-balance").textContent = this.$store.getters.getBalance;
-    // },
-
     closeForm() {
       this.isFormAddShow = false;
       this.isFormWithdrawalShow = false;
@@ -170,7 +165,7 @@ export default {
       const submit = document.querySelector(".form-add__submit");
       btnsAdd.forEach((btnAdd) => {
         btnAdd.addEventListener("click", (e) => {
-          if (e.target.id === btnAdd.id) {
+          if (e.currentTarget.id === btnAdd.id) {
             const cards = document.querySelectorAll(".card-currency");
             cards.forEach((card) => {
               if (btnAdd.id === card.id) {
@@ -182,12 +177,12 @@ export default {
 
             this.isFormAddShow = true;
             this.isFormWithdrawalShow = false;
-            form.id = e.target.id;
-            submit.id = e.target.id;
+            form.id = e.currentTarget.id;
+            submit.id = e.currentTarget.id;
 
             const allCommissions = document.querySelectorAll(".commission");
             allCommissions.forEach((el) => {
-              el.textContent = `Коммиссия: ${e.target.dataset.commissionValue}`;
+              el.textContent = `Коммиссия: ${e.currentTarget.dataset.commissionValue}`;
             });
           }
         });
@@ -201,7 +196,7 @@ export default {
       const submit = document.querySelector(".form-withdrawal__submit");
       btnsWithdrawal.forEach((btnWithdrawal) => {
         btnWithdrawal.addEventListener("click", (e) => {
-          if (e.target.id === btnWithdrawal.id) {
+          if (e.currentTarget.id === btnWithdrawal.id) {
             const cards = document.querySelectorAll(".card-currency");
             cards.forEach((card) => {
               if (btnWithdrawal.id === card.id) {
@@ -211,7 +206,7 @@ export default {
               }
             });
 
-            if (e.target.id === "USD" || e.target.id === "RUR") {
+            if (e.currentTarget.id === "USD" || e.currentTarget.id === "RUR") {
               this.isFiat = true;
               this.isCrypto = false;
             } else {
@@ -221,12 +216,12 @@ export default {
 
             this.isFormWithdrawalShow = true;
             this.isFormAddShow = false;
-            form.id = e.target.id;
-            submit.id = e.target.id;
+            form.id = e.currentTarget.id;
+            submit.id = e.currentTarget.id;
 
             const allCommissions = document.querySelectorAll(".commission");
             allCommissions.forEach((el) => {
-              el.textContent = `Коммиссия: ${e.target.dataset.commissionValue}`;
+              el.textContent = `Коммиссия: ${e.currentTarget.dataset.commissionValue}`;
             });
           }
         });
@@ -236,11 +231,11 @@ export default {
 
     const validateInput = () => {
       const form = document.querySelector(".form-add");
-      const inputValue = document.querySelector(".form-add__input-value input");
+      const input = document.querySelector(".form-add__input-value input");
       const inputValueError = document.querySelector(".input-value-error");
       const submitBtn = document.querySelector(".form-add__submit");
 
-      inputValue.addEventListener("input", (e) => {
+      input.addEventListener("input", (e) => {
         const regex = /^[0-9]*\.?[0-9]*$/; // принимает только числа и точку
 
         if ((form.id === "BTS" && +e.target.value < 0.001) || !e.target.value.match(regex)) {
@@ -288,73 +283,123 @@ export default {
     validateInput();
 
     const addToBalance = () => {
-      const inputValue = document.querySelector(".form-add__input-value input");
+      const input = document.querySelector(".form-add__input-value input");
       const submit = document.querySelector(".form-add__submit");
       const allBalances = document.querySelectorAll(".currency-balance");
-      inputValue.addEventListener("change", (e) => {
-        const inputVal = e.target.value;
 
-        submit.addEventListener("click", () => {
-          allBalances.forEach((balance) => {
-            if (balance.id === "BTS" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance + +inputVal - (inputVal / 100) * 5;
-            } else if (balance.id === "USD" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance + +inputVal - (inputVal / 100) * 5;
-            } else if (balance.id === "DOGE" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance + +inputVal - 0.5;
-            } else if (balance.id === "LTC" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance + +inputVal - 0.5;
-            } else if (balance.id === "SHIB" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance + +inputVal - 10;
-            } else if (balance.id === "RUR" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance + +inputVal;
-            } else if (balance.id === "BNB" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance + +inputVal - 0.01;
-            }
-          });
+      submit.addEventListener("click", () => {
+        allBalances.forEach((balance) => {
+          if (balance.id === "BTS" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let result = currentBalance + +input.value - (input.value / 100) * 5;
+            balance.textContent = result.toFixed(4);
+            this.$store.dispatch("increaseBalanceBTS", +balance.textContent);
+          } else if (balance.id === "USD" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let result = currentBalance + +input.value - (input.value / 100) * 5;
+            balance.textContent = result.toFixed(4);
+            this.$store.dispatch("increaseBalanceUSD", +balance.textContent);
+          } else if (balance.id === "DOGE" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let result = currentBalance + +input.value - 0.5;
+            balance.textContent = result.toFixed(4);
+            this.$store.dispatch("increaseBalanceDOGE", +balance.textContent);
+          } else if (balance.id === "LTC" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let result = currentBalance + +input.value - 0.5;
+            balance.textContent = result.toFixed(4);
+            this.$store.dispatch("increaseBalanceLTC", +balance.textContent);
+          } else if (balance.id === "SHIB" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let result = currentBalance + +input.value - 10;
+            balance.textContent = result.toFixed(4);
+            this.$store.dispatch("increaseBalanceSHIB", +balance.textContent);
+          } else if (balance.id === "RUR" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let result = currentBalance + +input.value;
+            balance.textContent = result.toFixed(4);
+            this.$store.dispatch("increaseBalanceRUR", +balance.textContent);
+          } else if (balance.id === "BNB" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let result = currentBalance + +input.value - 0.01;
+            balance.textContent = result.toFixed(4);
+            this.$store.dispatch("increaseBalanceBNB", +balance.textContent);
+          }
         });
       });
     };
     addToBalance();
 
     const withdrawalFromBalance = () => {
-      const inputValue = document.querySelector(".form-withdrawal__input-value input");
+      const input = document.querySelector(".form-withdrawal__input-value input");
       const submit = document.querySelector(".form-withdrawal__submit");
       const allBalances = document.querySelectorAll(".currency-balance");
-      inputValue.addEventListener("change", (e) => {
-        const inputVal = e.target.value;
-        submit.addEventListener("click", () => {
-          allBalances.forEach((balance) => {
-            if (balance.id === "BTS" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance - +inputVal - (inputVal / 100) * 5;
-            } else if (balance.id === "USD" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance - +inputVal - (inputVal / 100) * 5;
-            } else if (balance.id === "DOGE" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance - +inputVal - 0.5;
-            } else if (balance.id === "LTC" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance - +inputVal - 0.5;
-            } else if (balance.id === "SHIB" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance - +inputVal - 10;
-            } else if (balance.id === "RUR" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance - +inputVal;
-            } else if (balance.id === "BNB" && balance.id === submit.id) {
-              let currentBalance = +balance.textContent;
-              balance.textContent = currentBalance - +inputVal - 0.01;
+
+      submit.addEventListener("click", () => {
+        allBalances.forEach((balance) => {
+          if (balance.id === "BTS" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - (input.value / 100) * 5;
+            if (currentBalance > valueWithComission) {
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(4);
+            } else {
+              alert("Нельзя вывести больше чем есть на балансе!");
             }
-          });
+          } else if (balance.id === "USD" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - (input.value / 100) * 5;
+            if (currentBalance > valueWithComission) {
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(4);
+            } else {
+              alert("Нельзя вывести больше чем есть на балансе!");
+            }
+          } else if (balance.id === "DOGE" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - 0.5;
+            if (currentBalance > valueWithComission) {
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(4);
+            } else {
+              alert("Нельзя вывести больше чем есть на балансе!");
+            }
+          } else if (balance.id === "LTC" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - 0.5;
+            if (currentBalance > valueWithComission) {
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(4);
+            } else {
+              alert("Нельзя вывести больше чем есть на балансе!");
+            }
+          } else if (balance.id === "SHIB" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - 10;
+            if (currentBalance > valueWithComission) {
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(4);
+            } else {
+              alert("Нельзя вывести больше чем есть на балансе!");
+            }
+          } else if (balance.id === "RUR" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            if (currentBalance > +input.value) {
+              let result = currentBalance - +input.value;
+              balance.textContent = result.toFixed(4);
+            } else {
+              alert("Нельзя вывести больше чем есть на балансе!");
+            }
+          } else if (balance.id === "BNB" && balance.id === submit.id) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - 0.01;
+            if (currentBalance > valueWithComission) {
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(4);
+            } else {
+              alert("Нельзя вывести больше чем есть на балансе!");
+            }
+          }
         });
       });
     };
