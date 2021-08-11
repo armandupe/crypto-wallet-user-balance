@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-row class="currencies-list">
-      <v-col v-for="card in cards" :key="card.id" cols="4">
+      <v-col v-for="card in cards" :key="card.id" sm="4" cols="12">
         <v-card class="card-currency" :id="card.currencyTitle" elevation="2">
           <div class="d-flex flex-column pa-4">
             <div class="d-flex mb-3">
-              <h2 class="currency-title mr-0 mr-md-2">{{ card.currencyTitle }}</h2>
+              <h2 class="currency-title mr-2">{{ card.currencyTitle }}</h2>
               <span
                 :id="card.currencyTitle"
                 :data-commission="card.currencyCommissionTitle"
@@ -19,7 +19,7 @@
                 :data-commission-value="card.currencyCommissionTitle"
                 :data-min-value="card.minValue"
                 color="primary"
-                class="currency-add mb-2 mr-0 mr-sm-2"
+                class="currency-add mb-2 mr-2"
                 elevation="2"
                 >{{ currencyAddMsg }}</v-btn
               >
@@ -31,51 +31,140 @@
                 >{{ currencyWithdrawalMsg }}</v-btn
               >
             </div>
+            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 1">
+              <v-img
+                class="img-currency"
+                contain
+                max-height="60"
+                max-width="60"
+                :src="require('../assets/bts.svg')"
+              ></v-img>
+            </div>
+            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 2">
+              <v-img
+                class="img-currency"
+                contain
+                max-height="60"
+                max-width="60"
+                :src="require('../assets/usd.svg')"
+              ></v-img>
+            </div>
+            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 3">
+              <v-img
+                class="img-currency"
+                contain
+                max-height="60"
+                max-width="60"
+                :src="require('../assets/doge.svg')"
+              ></v-img>
+            </div>
+            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 4">
+              <v-img
+                class="img-currency"
+                contain
+                max-height="60"
+                max-width="60"
+                :src="require('../assets/ltc.svg')"
+              ></v-img>
+            </div>
+            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 5">
+              <v-img
+                class="img-currency"
+                contain
+                max-height="60"
+                max-width="60"
+                :src="require('../assets/shib.png')"
+              ></v-img>
+            </div>
+            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 6">
+              <v-img
+                class="img-currency"
+                contain
+                max-height="60"
+                max-width="60"
+                :src="require('../assets/rur.svg')"
+              ></v-img>
+            </div>
+            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 7">
+              <v-img
+                class="img-currency"
+                contain
+                max-height="60"
+                max-width="60"
+                :src="require('../assets/bnb.svg')"
+              ></v-img>
+            </div>
           </div>
         </v-card>
       </v-col>
+      <v-col cols="12">
+        <v-alert v-if="isErrorShow" dense elevation="6" prominent type="error">{{ errorWithdrawalMsg }}</v-alert>
+      </v-col>
       <v-col v-show="isFormAddShow" cols="12">
         <form class="form-add mb-15">
-          <div class="row">
-            <div class="col-12">
+          <v-row>
+            <v-col cols="12">
               <v-text-field solo class="form-add__input-value" v-model="amount" label="Сумма" required></v-text-field>
-              <p class="input-value-error error--text" v-show="isInputValueErr"></p>
-              <p class="commission"></p>
-            </div>
-            <div class="col-12">
-              <v-textarea filled label="Комментарий"></v-textarea>
-            </div>
-            <v-btn class="form-add__submit mr-4"> Ввести </v-btn>
-            <v-btn @click="closeForm"> Закрыть </v-btn>
-          </div>
+              <v-alert
+                class="input-value-error mb-0"
+                v-show="isInputValueErr"
+                dense
+                elevation="6"
+                prominent
+                type="error"
+              ></v-alert>
+            </v-col>
+            <v-col sm="3" cols="12">
+              <v-alert color="orange" dense class="commission mb-0" elevation="3" type="warning"></v-alert>
+            </v-col>
+            <v-col cols="12">
+              <v-textarea rows="1" row-height="15" filled label="Комментарий"></v-textarea>
+            </v-col>
+            <v-col cols="12">
+              <v-btn class="form-add__submit mr-4"> Ввести </v-btn>
+              <v-btn @click="closeForm"> Закрыть </v-btn>
+            </v-col>
+          </v-row>
         </form>
       </v-col>
       <v-col v-show="isFormWithdrawalShow" cols="12">
         <form class="form-withdrawal mb-15">
-          <div class="row">
-            <div class="col-12">
+          <v-row>
+            <v-col cols="12">
               <v-text-field
                 solo
                 class="form-withdrawal__input-value"
                 v-model="amount"
                 label="Сумма"
+                @input="validateInputWithdrawal"
                 required
               ></v-text-field>
-              <p class="withdrawal-value-error error--text" v-show="isWithdrawalValueErr"></p>
-              <p class="commission"></p>
-            </div>
-            <div v-if="isCrypto" class="col-12">
+              <v-alert
+                class="input-withdrawalValue-error mb-0"
+                v-show="isInputValueErr"
+                dense
+                elevation="6"
+                prominent
+                type="error"
+              ></v-alert>
+            </v-col>
+            <v-col sm="3" cols="12">
+              <v-alert color="orange" dense class="commission mb-0" elevation="3" type="warning"></v-alert>
+            </v-col>
+            <v-col v-if="isCrypto" cols="12">
               <v-text-field solo v-model="address" label="Адрес" required></v-text-field>
-            </div>
-            <div v-if="isFiat" class="col-12">
+            </v-col>
+            <v-col v-if="isFiat" cols="12">
               <v-text-field solo v-model="requisites" label="Реквизиты" required></v-text-field>
-            </div>
-            <div class="col-12">
-              <v-textarea filled label="Комментарий"></v-textarea>
-            </div>
-            <v-btn class="form-withdrawal__submit mr-4"> Вывести </v-btn>
-            <v-btn @click="closeForm"> Закрыть </v-btn>
-          </div>
+            </v-col>
+            <v-col cols="12">
+              <v-textarea rows="1" row-height="15" filled label="Комментарий"></v-textarea>
+            </v-col>
+            <v-col cols="12">
+              <v-btn class="form-withdrawal__submit mr-4"> Вывести </v-btn>
+              <v-btn @click="closeForm"> Закрыть </v-btn>
+            </v-col>
+          </v-row>
         </form>
       </v-col>
     </v-row>
@@ -87,6 +176,8 @@ export default {
   name: "CryptoCurrencyCard",
 
   data: () => ({
+    isErrorShow: false,
+    errorWithdrawalMsg: "Нельзя вывести больше чем есть на балансе!",
     amount: "",
     address: "",
     requisites: "",
@@ -94,7 +185,6 @@ export default {
     currencyWithdrawalMsg: "Вывод",
     isFormAddShow: false,
     isFormWithdrawalShow: false,
-    isWithdrawalValueErr: false,
     isInputValueErr: false,
     isAdd: false,
     isFiat: false,
@@ -156,6 +246,16 @@ export default {
       this.isFormAddShow = false;
       this.isFormWithdrawalShow = false;
     },
+    validateInputWithdrawal(event) {
+      const regex = /^[0-9]*\.?[0-9]*$/;
+      const inputValueError = document.querySelector(".input-withdrawalValue-error .v-alert__content");
+      if (!event.match(regex)) {
+        this.isInputValueErr = true;
+        inputValueError.textContent = `Введите сумму`;
+      } else {
+        this.isInputValueErr = false;
+      }
+    },
   },
   computed: {},
   mounted() {
@@ -163,9 +263,15 @@ export default {
       const btnsAdd = document.querySelectorAll(".currency-add");
       const form = document.querySelector(".form-add");
       const submit = document.querySelector(".form-add__submit");
+
       btnsAdd.forEach((btnAdd) => {
         btnAdd.addEventListener("click", (e) => {
+          this.isErrorShow = false;
+
           if (e.currentTarget.id === btnAdd.id) {
+            e.currentTarget.classList.remove("elevation-2");
+            e.currentTarget.classList.toggle("elevation-20");
+
             const cards = document.querySelectorAll(".card-currency");
             cards.forEach((card) => {
               if (btnAdd.id === card.id) {
@@ -175,8 +281,15 @@ export default {
               }
             });
 
-            this.isFormAddShow = true;
-            this.isFormWithdrawalShow = false;
+            if (this.isFormAddShow === false) {
+              this.isFormAddShow = true;
+            } else if (this.isFormAddShow === true) {
+              this.isFormAddShow = false;
+            } else if (this.isFormWithdrawalShow === true && this.isFormAddShow === false) {
+              this.isFormWithdrawalShow === false;
+              this.isFormAddShow = true;
+            }
+
             form.id = e.currentTarget.id;
             submit.id = e.currentTarget.id;
 
@@ -216,6 +329,12 @@ export default {
 
             this.isFormWithdrawalShow = true;
             this.isFormAddShow = false;
+
+            // this.isFormWithdrawalShow !== true
+            //   ? (this.isFormWithdrawalShow = true)
+            //   : (this.isFormWithdrawalShow = false);
+            // this.isFormAddShow !== false ? (this.isFormAddShow = false) : (this.isFormAddShow = true);
+
             form.id = e.currentTarget.id;
             submit.id = e.currentTarget.id;
 
@@ -232,12 +351,11 @@ export default {
     const validateInput = () => {
       const form = document.querySelector(".form-add");
       const input = document.querySelector(".form-add__input-value input");
-      const inputValueError = document.querySelector(".input-value-error");
+      const inputValueError = document.querySelector(".input-value-error .v-alert__content");
       const submitBtn = document.querySelector(".form-add__submit");
 
       input.addEventListener("input", (e) => {
         const regex = /^[0-9]*\.?[0-9]*$/; // принимает только числа и точку
-
         if ((form.id === "BTS" && +e.target.value < 0.001) || !e.target.value.match(regex)) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 0.001 BTC`;
@@ -378,10 +496,11 @@ export default {
           let currentBalance = +balanceBTS.textContent;
           let valueWithComission = +input.value - (input.value / 100) * 5;
           if (currentBalance > valueWithComission) {
+            this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
             balanceBTS.textContent = result.toFixed(4);
           } else {
-            alert("Нельзя вывести больше чем есть на балансе!");
+            this.isErrorShow = true;
           }
         }
         payload.BTS = balanceBTS.textContent;
@@ -390,10 +509,11 @@ export default {
           let currentBalance = +balanceUSD.textContent;
           let valueWithComission = +input.value - (input.value / 100) * 5;
           if (currentBalance > valueWithComission) {
+            this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
             balanceUSD.textContent = result.toFixed(4);
           } else {
-            alert("Нельзя вывести больше чем есть на балансе!");
+            this.isErrorShow = true;
           }
         }
         payload.USD = balanceUSD.textContent;
@@ -402,10 +522,11 @@ export default {
           let currentBalance = +balanceDOGE.textContent;
           let valueWithComission = +input.value - 0.5;
           if (currentBalance > valueWithComission) {
+            this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
             balanceDOGE.textContent = result.toFixed(4);
           } else {
-            alert("Нельзя вывести больше чем есть на балансе!");
+            this.isErrorShow = true;
           }
         }
         payload.DOGE = balanceDOGE.textContent;
@@ -414,10 +535,11 @@ export default {
           let currentBalance = +balanceLTC.textContent;
           let valueWithComission = +input.value - 0.5;
           if (currentBalance > valueWithComission) {
+            this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
             balanceLTC.textContent = result.toFixed(4);
           } else {
-            alert("Нельзя вывести больше чем есть на балансе!");
+            this.isErrorShow = true;
           }
         }
         payload.LTC = balanceLTC.textContent;
@@ -426,10 +548,11 @@ export default {
           let currentBalance = +balanceSHIB.textContent;
           let valueWithComission = +input.value - 10;
           if (currentBalance > valueWithComission) {
+            this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
             balanceSHIB.textContent = result.toFixed(4);
           } else {
-            alert("Нельзя вывести больше чем есть на балансе!");
+            this.isErrorShow = true;
           }
         }
         payload.SHIB = balanceSHIB.textContent;
@@ -437,10 +560,11 @@ export default {
         if (balanceRUR.id === "RUR" && balanceRUR.id === submit.id) {
           let currentBalance = +balanceRUR.textContent;
           if (currentBalance > +input.value) {
+            this.isErrorShow = false;
             let result = currentBalance - +input.value;
             balanceRUR.textContent = result.toFixed(4);
           } else {
-            alert("Нельзя вывести больше чем есть на балансе!");
+            this.isErrorShow = true;
           }
         }
         payload.RUR = balanceRUR.textContent;
@@ -449,10 +573,11 @@ export default {
           let currentBalance = +balanceBNB.textContent;
           let valueWithComission = +input.value - 0.01;
           if (currentBalance > valueWithComission) {
+            this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
             balanceBNB.textContent = result.toFixed(4);
           } else {
-            alert("Нельзя вывести больше чем есть на балансе!");
+            this.isErrorShow = true;
           }
         }
         payload.BNB = balanceBNB.textContent;
@@ -466,10 +591,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container::v-deep {
+  max-width: 920px;
+}
+.img-currency {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
 .currency-balance {
   color: #00897b;
 }
 .current-currency-card {
-  outline: 1px solid #00897b;
+  outline: 3px solid #1779da;
 }
 </style>
