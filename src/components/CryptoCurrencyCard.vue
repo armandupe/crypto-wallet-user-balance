@@ -412,43 +412,43 @@ export default {
         if (balanceBTS.id === "BTS" && balanceBTS.id === submit.id) {
           let currentBalance = +balanceBTS.textContent;
           let result = currentBalance + +input.value - (input.value / 100) * 5;
-          balanceBTS.textContent = result.toFixed(4);
+          balanceBTS.textContent = result.toFixed(2);
         }
         payload.BTS = balanceBTS.textContent;
         if (balanceUSD.id === "USD" && balanceUSD.id === submit.id) {
           let currentBalance = +balanceUSD.textContent;
           let result = currentBalance + +input.value - (input.value / 100) * 5;
-          balanceUSD.textContent = result.toFixed(4);
+          balanceUSD.textContent = result.toFixed(2);
         }
         payload.USD = balanceUSD.textContent;
         if (balanceDOGE.id === "DOGE" && balanceDOGE.id === submit.id) {
           let currentBalance = +balanceDOGE.textContent;
           let result = currentBalance + +input.value - 0.5;
-          balanceDOGE.textContent = result.toFixed(4);
+          balanceDOGE.textContent = result.toFixed(2);
         }
         payload.DOGE = balanceDOGE.textContent;
         if (balanceLTC.id === "LTC" && balanceLTC.id === submit.id) {
           let currentBalance = +balanceLTC.textContent;
           let result = currentBalance + +input.value - 0.5;
-          balanceLTC.textContent = result.toFixed(4);
+          balanceLTC.textContent = result.toFixed(2);
         }
         payload.LTC = balanceLTC.textContent;
         if (balanceSHIB.id === "SHIB" && balanceSHIB.id === submit.id) {
           let currentBalance = +balanceSHIB.textContent;
           let result = currentBalance + +input.value - 10;
-          balanceSHIB.textContent = result.toFixed(4);
+          balanceSHIB.textContent = result.toFixed(2);
         }
         payload.SHIB = balanceSHIB.textContent;
         if (balanceRUR.id === "RUR" && balanceRUR.id === submit.id) {
           let currentBalance = +balanceRUR.textContent;
           let result = currentBalance + +input.value;
-          balanceRUR.textContent = result.toFixed(4);
+          balanceRUR.textContent = result.toFixed(2);
         }
         payload.RUR = balanceRUR.textContent;
         if (balanceBNB.id === "BNB" && balanceBNB.id === submit.id) {
           let currentBalance = +balanceBNB.textContent;
           let result = currentBalance + +input.value - 0.01;
-          balanceBNB.textContent = result.toFixed(4);
+          balanceBNB.textContent = result.toFixed(2);
         }
         payload.BNB = balanceBNB.textContent;
 
@@ -485,7 +485,7 @@ export default {
           if (currentBalance > valueWithComission) {
             this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
-            balanceBTS.textContent = result.toFixed(4);
+            balanceBTS.textContent = result.toFixed(2);
           } else {
             this.isErrorShow = true;
           }
@@ -498,7 +498,7 @@ export default {
           if (currentBalance > valueWithComission) {
             this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
-            balanceUSD.textContent = result.toFixed(4);
+            balanceUSD.textContent = result.toFixed(2);
           } else {
             this.isErrorShow = true;
           }
@@ -511,7 +511,7 @@ export default {
           if (currentBalance > valueWithComission) {
             this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
-            balanceDOGE.textContent = result.toFixed(4);
+            balanceDOGE.textContent = result.toFixed(2);
           } else {
             this.isErrorShow = true;
           }
@@ -524,7 +524,7 @@ export default {
           if (currentBalance > valueWithComission) {
             this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
-            balanceLTC.textContent = result.toFixed(4);
+            balanceLTC.textContent = result.toFixed(2);
           } else {
             this.isErrorShow = true;
           }
@@ -537,7 +537,7 @@ export default {
           if (currentBalance > valueWithComission) {
             this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
-            balanceSHIB.textContent = result.toFixed(4);
+            balanceSHIB.textContent = result.toFixed(2);
           } else {
             this.isErrorShow = true;
           }
@@ -549,7 +549,7 @@ export default {
           if (currentBalance > +input.value) {
             this.isErrorShow = false;
             let result = currentBalance - +input.value;
-            balanceRUR.textContent = result.toFixed(4);
+            balanceRUR.textContent = result.toFixed(2);
           } else {
             this.isErrorShow = true;
           }
@@ -562,7 +562,7 @@ export default {
           if (currentBalance > valueWithComission) {
             this.isErrorShow = false;
             let result = currentBalance - valueWithComission;
-            balanceBNB.textContent = result.toFixed(4);
+            balanceBNB.textContent = result.toFixed(2);
           } else {
             this.isErrorShow = true;
           }
