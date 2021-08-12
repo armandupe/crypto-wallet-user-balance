@@ -245,6 +245,7 @@ export default {
     closeForm() {
       this.isFormAddShow = false;
       this.isFormWithdrawalShow = false;
+      this.isErrorShow = false;
     },
     validateInputWithdrawal(event) {
       const regex = /^[0-9]*\.?[0-9]*$/;
@@ -269,9 +270,6 @@ export default {
           this.isErrorShow = false;
 
           if (e.currentTarget.id === btnAdd.id) {
-            e.currentTarget.classList.remove("elevation-2");
-            e.currentTarget.classList.toggle("elevation-20");
-
             const cards = document.querySelectorAll(".card-currency");
             cards.forEach((card) => {
               if (btnAdd.id === card.id) {
@@ -281,14 +279,8 @@ export default {
               }
             });
 
-            if (this.isFormAddShow === false) {
-              this.isFormAddShow = true;
-            } else if (this.isFormAddShow === true) {
-              this.isFormAddShow = false;
-            } else if (this.isFormWithdrawalShow === true && this.isFormAddShow === false) {
-              this.isFormWithdrawalShow === false;
-              this.isFormAddShow = true;
-            }
+            this.isFormAddShow = true;
+            this.isFormWithdrawalShow = false;
 
             form.id = e.currentTarget.id;
             submit.id = e.currentTarget.id;
@@ -329,11 +321,6 @@ export default {
 
             this.isFormWithdrawalShow = true;
             this.isFormAddShow = false;
-
-            // this.isFormWithdrawalShow !== true
-            //   ? (this.isFormWithdrawalShow = true)
-            //   : (this.isFormWithdrawalShow = false);
-            // this.isFormAddShow !== false ? (this.isFormAddShow = false) : (this.isFormAddShow = true);
 
             form.id = e.currentTarget.id;
             submit.id = e.currentTarget.id;
