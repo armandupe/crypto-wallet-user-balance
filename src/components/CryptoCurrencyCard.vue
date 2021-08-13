@@ -20,6 +20,7 @@
                 :data-min-value="card.minValue"
                 color="primary"
                 class="currency-add mb-2 mr-2"
+                @click="showForm"
                 elevation="2"
                 >{{ currencyAddMsg }}</v-btn
               >
@@ -27,71 +28,18 @@
                 class="currency-withdrawal"
                 :id="card.currencyTitle"
                 :data-commission-value="card.currencyCommissionTitle"
+                @click="showForm"
                 elevation="2"
                 >{{ currencyWithdrawalMsg }}</v-btn
               >
             </div>
-            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 1">
+            <div class="d-flex justify-center">
               <v-img
                 class="img-currency"
                 contain
                 max-height="60"
                 max-width="60"
-                :src="require('../assets/bts.svg')"
-              ></v-img>
-            </div>
-            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 2">
-              <v-img
-                class="img-currency"
-                contain
-                max-height="60"
-                max-width="60"
-                :src="require('../assets/usd.svg')"
-              ></v-img>
-            </div>
-            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 3">
-              <v-img
-                class="img-currency"
-                contain
-                max-height="60"
-                max-width="60"
-                :src="require('../assets/doge.svg')"
-              ></v-img>
-            </div>
-            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 4">
-              <v-img
-                class="img-currency"
-                contain
-                max-height="60"
-                max-width="60"
-                :src="require('../assets/ltc.svg')"
-              ></v-img>
-            </div>
-            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 5">
-              <v-img
-                class="img-currency"
-                contain
-                max-height="60"
-                max-width="60"
-                :src="require('../assets/shib.png')"
-              ></v-img>
-            </div>
-            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 6">
-              <v-img
-                class="img-currency"
-                contain
-                max-height="60"
-                max-width="60"
-                :src="require('../assets/rur.svg')"
-              ></v-img>
-            </div>
-            <div class="d-flex justify-center" :id="card.id" v-if="card.id === 7">
-              <v-img
-                class="img-currency"
-                contain
-                max-height="60"
-                max-width="60"
-                :src="require('../assets/bnb.svg')"
+                :src="require(`../assets/${card.currencyTitle}.svg`)"
               ></v-img>
             </div>
           </div>
@@ -101,10 +49,17 @@
         <v-alert v-if="isErrorShow" dense elevation="6" prominent type="error">{{ errorWithdrawalMsg }}</v-alert>
       </v-col>
       <v-col v-show="isFormAddShow" cols="12">
-        <form class="form-add mb-15">
+        <form class="form-add form mb-15">
           <v-row>
             <v-col cols="12">
-              <v-text-field solo class="form-add__input-value" v-model="amount" label="Сумма" required></v-text-field>
+              <v-text-field
+                solo
+                class="form-add__input-value"
+                @input="validateInput"
+                v-model="amount"
+                label="Сумма"
+                required
+              ></v-text-field>
               <v-alert
                 class="input-value-error mb-0"
                 v-show="isInputValueErr"
@@ -121,14 +76,14 @@
               <v-textarea rows="1" row-height="15" filled label="Комментарий"></v-textarea>
             </v-col>
             <v-col cols="12">
-              <v-btn class="form-add__submit mr-4"> Ввести </v-btn>
+              <v-btn class="form-add__submit form-btn mr-4"> Ввести </v-btn>
               <v-btn @click="closeForm"> Закрыть </v-btn>
             </v-col>
           </v-row>
         </form>
       </v-col>
       <v-col v-show="isFormWithdrawalShow" cols="12">
-        <form class="form-withdrawal mb-15">
+        <form class="form-withdrawal form mb-15">
           <v-row>
             <v-col cols="12">
               <v-text-field
@@ -136,7 +91,7 @@
                 class="form-withdrawal__input-value"
                 v-model="amount"
                 label="Сумма"
-                @input="validateInputWithdrawal"
+                @input="validateInput"
                 required
               ></v-text-field>
               <v-alert
@@ -161,7 +116,7 @@
               <v-textarea rows="1" row-height="15" filled label="Комментарий"></v-textarea>
             </v-col>
             <v-col cols="12">
-              <v-btn class="form-withdrawal__submit mr-4"> Вывести </v-btn>
+              <v-btn class="form-withdrawal__submit form-btn mr-4"> Вывести </v-btn>
               <v-btn @click="closeForm"> Закрыть </v-btn>
             </v-col>
           </v-row>
@@ -189,6 +144,7 @@ export default {
     isAdd: false,
     isFiat: false,
     isCrypto: true,
+    dialog: false,
     cards: [
       {
         currencyTitle: "BTS",
@@ -242,138 +198,98 @@ export default {
     ],
   }),
   methods: {
+    showForm(event) {
+      if (event.currentTarget.classList.contains("currency-add")) {
+        this.isFormAddShow = true;
+        this.isFormWithdrawalShow = false;
+      } else {
+        this.isFormWithdrawalShow = true;
+        this.isFormAddShow = false;
+      }
+
+      this.isErrorShow = false;
+
+      const cards = document.querySelectorAll(".card-currency");
+      cards.forEach((card) => {
+        if (event.currentTarget.id === card.id) {
+          card.classList.add("current-currency-card");
+        } else {
+          card.classList.remove("current-currency-card");
+        }
+      });
+
+      if (event.currentTarget.id === "USD" || event.currentTarget.id === "RUR") {
+        this.isFiat = true;
+        this.isCrypto = false;
+      } else {
+        this.isFiat = false;
+        this.isCrypto = true;
+      }
+
+      const forms = document.querySelectorAll(".form");
+      const submits = document.querySelectorAll(".form-btn");
+      forms.forEach((form) => {
+        form.id = event.currentTarget.id;
+      });
+      submits.forEach((submit) => {
+        submit.id = event.currentTarget.id;
+      });
+
+      const allCommissions = document.querySelectorAll(".commission");
+      allCommissions.forEach((el) => {
+        el.textContent = `Коммиссия: ${event.currentTarget.dataset.commissionValue}`;
+      });
+    },
     closeForm() {
       this.isFormAddShow = false;
       this.isFormWithdrawalShow = false;
       this.isErrorShow = false;
     },
-    validateInputWithdrawal(event) {
-      const regex = /^[0-9]*\.?[0-9]*$/;
-      const inputValueError = document.querySelector(".input-withdrawalValue-error .v-alert__content");
-      if (!event.match(regex)) {
-        this.isInputValueErr = true;
-        inputValueError.textContent = `Введите сумму`;
-      } else {
-        this.isInputValueErr = false;
-      }
-    },
-  },
-  computed: {},
-  mounted() {
-    const showFormAdd = () => {
-      const btnsAdd = document.querySelectorAll(".currency-add");
+    validateInput(inputValue) {
       const form = document.querySelector(".form-add");
-      const submit = document.querySelector(".form-add__submit");
-
-      btnsAdd.forEach((btnAdd) => {
-        btnAdd.addEventListener("click", (e) => {
-          this.isErrorShow = false;
-
-          if (e.currentTarget.id === btnAdd.id) {
-            const cards = document.querySelectorAll(".card-currency");
-            cards.forEach((card) => {
-              if (btnAdd.id === card.id) {
-                card.classList.add("current-currency-card");
-              } else {
-                card.classList.remove("current-currency-card");
-              }
-            });
-
-            this.isFormAddShow = true;
-            this.isFormWithdrawalShow = false;
-
-            form.id = e.currentTarget.id;
-            submit.id = e.currentTarget.id;
-
-            const allCommissions = document.querySelectorAll(".commission");
-            allCommissions.forEach((el) => {
-              el.textContent = `Коммиссия: ${e.currentTarget.dataset.commissionValue}`;
-            });
-          }
-        });
-      });
-    };
-    showFormAdd();
-
-    const showFormWithdrawal = () => {
-      const btnsWithdrawal = document.querySelectorAll(".currency-withdrawal");
-      const form = document.querySelector(".form-withdrawal");
-      const submit = document.querySelector(".form-withdrawal__submit");
-      btnsWithdrawal.forEach((btnWithdrawal) => {
-        btnWithdrawal.addEventListener("click", (e) => {
-          if (e.currentTarget.id === btnWithdrawal.id) {
-            const cards = document.querySelectorAll(".card-currency");
-            cards.forEach((card) => {
-              if (btnWithdrawal.id === card.id) {
-                card.classList.add("current-currency-card");
-              } else {
-                card.classList.remove("current-currency-card");
-              }
-            });
-
-            if (e.currentTarget.id === "USD" || e.currentTarget.id === "RUR") {
-              this.isFiat = true;
-              this.isCrypto = false;
-            } else {
-              this.isFiat = false;
-              this.isCrypto = true;
-            }
-
-            this.isFormWithdrawalShow = true;
-            this.isFormAddShow = false;
-
-            form.id = e.currentTarget.id;
-            submit.id = e.currentTarget.id;
-
-            const allCommissions = document.querySelectorAll(".commission");
-            allCommissions.forEach((el) => {
-              el.textContent = `Коммиссия: ${e.currentTarget.dataset.commissionValue}`;
-            });
-          }
-        });
-      });
-    };
-    showFormWithdrawal();
-
-    const validateInput = () => {
-      const form = document.querySelector(".form-add");
-      const input = document.querySelector(".form-add__input-value input");
       const inputValueError = document.querySelector(".input-value-error .v-alert__content");
+      // const inputWithdrawalValueError = document.querySelector(".input-withdrawalValue-error .v-alert__content");
       const submitBtn = document.querySelector(".form-add__submit");
 
-      input.addEventListener("input", (e) => {
-        const regex = /^[0-9]*\.?[0-9]*$/; // принимает только числа и точку
-        if ((form.id === "BTS" && +e.target.value < 0.001) || !e.target.value.match(regex)) {
+      const regex = /^[0-9]*\.?[0-9]*$/;
+
+      if (!inputValue.match(regex)) {
+        this.isInputValueErr = true;
+        inputValueError.textContent = `Введите число!`;
+        submitBtn.classList.add("v-btn--disabled");
+        submitBtn.disabled = true;
+      } else {
+        if (form.id === "BTS" && +inputValue < 0.001) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 0.001 BTC`;
           submitBtn.classList.add("v-btn--disabled");
           submitBtn.disabled = true;
-        } else if ((form.id === "USD" && +e.target.value < 100) || !e.target.value.match(regex)) {
+        } else if (form.id === "USD" && +inputValue < 100) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 100 USD`;
           submitBtn.classList.add("v-btn--disabled");
           submitBtn.disabled = true;
-        } else if ((form.id === "DOGE" && +e.target.value < 5) || !e.target.value.match(regex)) {
+        } else if (form.id === "DOGE" && +inputValue < 5) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 5 DOGE`;
           submitBtn.classList.add("v-btn--disabled");
           submitBtn.disabled = true;
-        } else if ((form.id === "LTC" && +e.target.value < 1) || !e.target.value.match(regex)) {
+        } else if (form.id === "LTC" && +inputValue < 1) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 1 LTC`;
           submitBtn.classList.add("v-btn--disabled");
           submitBtn.disabled = true;
-        } else if ((form.id === "SHIB" && +e.target.value < 500) || !e.target.value.match(regex)) {
+        } else if (form.id === "SHIB" && +inputValue < 500) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 500 SHIB`;
           submitBtn.classList.add("v-btn--disabled");
           submitBtn.disabled = true;
-        } else if ((form.id === "RUR" && +e.target.value < 10000) || !e.target.value.match(regex)) {
+        } else if (form.id === "RUR" && +inputValue < 10000) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 10000 RUR`;
           submitBtn.classList.add("v-btn--disabled");
           submitBtn.disabled = true;
-        } else if ((form.id === "BNB" && +e.target.value < 0.15) || !e.target.value.match(regex)) {
+        } else if (form.id === "BNB" && +inputValue < 0.15) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 0.15 BNB`;
           submitBtn.classList.add("v-btn--disabled");
@@ -383,10 +299,27 @@ export default {
           submitBtn.classList.remove("v-btn--disabled");
           submitBtn.disabled = false;
         }
-      });
-    };
-    validateInput();
 
+        // if (!inputValue.match(regex)) {
+        //   this.isInputValueErr = true;
+        //   inputWithdrawalValueError.textContent = `Введите сумму`;
+        // } else {
+        //   this.isInputValueErr = false;
+        // }
+      }
+    },
+    // validateInputWithdrawal(inputValue) {
+    //   const regex = /^[0-9]*\.?[0-9]*$/;
+    //   const inputValueError = document.querySelector(".input-withdrawalValue-error .v-alert__content");
+    //   if (!inputValue.match(regex)) {
+    //     this.isInputValueErr = true;
+    //     inputValueError.textContent = `Введите сумму`;
+    //   } else {
+    //     this.isInputValueErr = false;
+    //   }
+    // },
+  },
+  mounted() {
     const addToBalance = () => {
       const input = document.querySelector(".form-add__input-value input");
       const submit = document.querySelector(".form-add__submit");
