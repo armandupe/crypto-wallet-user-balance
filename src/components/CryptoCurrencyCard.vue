@@ -252,6 +252,7 @@ export default {
         submitBtn.classList.add("v-btn--disabled");
         submitBtn.disabled = true;
       } else {
+        this.isInputValueErr = false;
         if (form.id === "BTS" && +inputValue < 0.001) {
           this.isInputValueErr = true;
           inputValueError.textContent = `Минимальная сумма: 0.001 BTC`;
