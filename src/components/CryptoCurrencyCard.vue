@@ -95,7 +95,7 @@
                 required
               ></v-text-field>
               <v-alert
-                class="input-withdrawalValue-error mb-0"
+                class="input-value-error mb-0"
                 v-show="isInputValueErr"
                 dense
                 elevation="6"
@@ -242,12 +242,11 @@ export default {
     validateInput(inputValue) {
       const form = document.querySelector(".form-add");
       const inputValueError = document.querySelector(".input-value-error .v-alert__content");
-      // const inputWithdrawalValueError = document.querySelector(".input-withdrawalValue-error .v-alert__content");
       const submitBtn = document.querySelector(".form-add__submit");
 
       const regex = /^[0-9]*\.?[0-9]*$/;
 
-      if (!inputValue.match(regex)) {
+      if (!inputValue.match(regex) || inputValue === "") {
         this.isInputValueErr = true;
         inputValueError.textContent = `Введите число!`;
         submitBtn.classList.add("v-btn--disabled");
