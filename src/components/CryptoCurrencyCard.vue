@@ -76,7 +76,7 @@
               <v-textarea rows="1" row-height="15" filled label="Комментарий"></v-textarea>
             </v-col>
             <v-col cols="12">
-              <v-btn class="form-add__submit form-btn mr-4"> Ввести </v-btn>
+              <v-btn @click="addToBalance" class="form-add__submit form-btn mr-4"> Ввести </v-btn>
               <v-btn @click="closeForm"> Закрыть </v-btn>
             </v-col>
           </v-row>
@@ -116,7 +116,7 @@
               <v-textarea rows="1" row-height="15" filled label="Комментарий"></v-textarea>
             </v-col>
             <v-col cols="12">
-              <v-btn class="form-withdrawal__submit form-btn mr-4"> Вывести </v-btn>
+              <v-btn @click="withdrawalFromBalance" class="form-withdrawal__submit form-btn mr-4"> Вывести </v-btn>
               <v-btn @click="closeForm"> Закрыть </v-btn>
             </v-col>
           </v-row>
@@ -199,6 +199,11 @@ export default {
   }),
   methods: {
     showForm(event) {
+      const cards = document.querySelectorAll(".card-currency");
+      const forms = document.querySelectorAll(".form");
+      const submits = document.querySelectorAll(".form-btn");
+      const allCommissions = document.querySelectorAll(".commission");
+
       if (event.currentTarget.classList.contains("currency-add")) {
         this.isFormAddShow = true;
         this.isFormWithdrawalShow = false;
@@ -209,14 +214,11 @@ export default {
 
       this.isErrorShow = false;
 
-      const cards = document.querySelectorAll(".card-currency");
-      cards.forEach((card) => {
-        if (event.currentTarget.id === card.id) {
-          card.classList.add("current-currency-card");
-        } else {
-          card.classList.remove("current-currency-card");
-        }
-      });
+      cards.forEach((card) =>
+        event.currentTarget.id === card.id
+          ? card.classList.add("current-currency-card")
+          : card.classList.remove("current-currency-card"),
+      );
 
       if (event.currentTarget.id === "USD" || event.currentTarget.id === "RUR") {
         this.isFiat = true;
@@ -226,19 +228,11 @@ export default {
         this.isCrypto = true;
       }
 
-      const forms = document.querySelectorAll(".form");
-      const submits = document.querySelectorAll(".form-btn");
-      forms.forEach((form) => {
-        form.id = event.currentTarget.id;
-      });
-      submits.forEach((submit) => {
-        submit.id = event.currentTarget.id;
-      });
+      forms.forEach((form) => (form.id = event.currentTarget.id));
 
-      const allCommissions = document.querySelectorAll(".commission");
-      allCommissions.forEach((el) => {
-        el.textContent = `Коммиссия: ${event.currentTarget.dataset.commissionValue}`;
-      });
+      submits.forEach((submit) => (submit.id = event.currentTarget.id));
+
+      allCommissions.forEach((el) => (el.textContent = `Коммиссия: ${event.currentTarget.dataset.commissionValue}`));
     },
     closeForm() {
       this.isFormAddShow = false;
@@ -299,213 +293,137 @@ export default {
           submitBtn.classList.remove("v-btn--disabled");
           submitBtn.disabled = false;
         }
-
-        // if (!inputValue.match(regex)) {
-        //   this.isInputValueErr = true;
-        //   inputWithdrawalValueError.textContent = `Введите сумму`;
-        // } else {
-        //   this.isInputValueErr = false;
-        // }
       }
     },
-    // validateInputWithdrawal(inputValue) {
-    //   const regex = /^[0-9]*\.?[0-9]*$/;
-    //   const inputValueError = document.querySelector(".input-withdrawalValue-error .v-alert__content");
-    //   if (!inputValue.match(regex)) {
-    //     this.isInputValueErr = true;
-    //     inputValueError.textContent = `Введите сумму`;
-    //   } else {
-    //     this.isInputValueErr = false;
-    //   }
-    // },
-  },
-  mounted() {
-    const addToBalance = () => {
-      const input = document.querySelector(".form-add__input-value input");
-      const submit = document.querySelector(".form-add__submit");
 
-      submit.addEventListener("click", () => {
-        let payload = {
-          BTS: 0,
-          USD: 0,
-          DOGE: 0,
-          LTC: 0,
-          SHIB: 0,
-          RUR: 0,
-          BNB: 0,
-        };
-        const balanceBTS = document.querySelector(".currency-balance#BTS");
-        const balanceUSD = document.querySelector(".currency-balance#USD");
-        const balanceDOGE = document.querySelector(".currency-balance#DOGE");
-        const balanceLTC = document.querySelector(".currency-balance#LTC");
-        const balanceSHIB = document.querySelector(".currency-balance#SHIB");
-        const balanceRUR = document.querySelector(".currency-balance#RUR");
-        const balanceBNB = document.querySelector(".currency-balance#BNB");
+    addToBalance(event) {
+      const cards = document.querySelectorAll(".card-currency");
+      const arrBalances = [];
 
-        if (balanceBTS.id === "BTS" && balanceBTS.id === submit.id) {
-          let currentBalance = +balanceBTS.textContent;
-          let result = currentBalance + +input.value - (input.value / 100) * 5;
-          balanceBTS.textContent = result.toFixed(2);
-        }
-        payload.BTS = balanceBTS.textContent;
-        if (balanceUSD.id === "USD" && balanceUSD.id === submit.id) {
-          let currentBalance = +balanceUSD.textContent;
-          let result = currentBalance + +input.value - (input.value / 100) * 5;
-          balanceUSD.textContent = result.toFixed(2);
-        }
-        payload.USD = balanceUSD.textContent;
-        if (balanceDOGE.id === "DOGE" && balanceDOGE.id === submit.id) {
-          let currentBalance = +balanceDOGE.textContent;
-          let result = currentBalance + +input.value - 0.5;
-          balanceDOGE.textContent = result.toFixed(2);
-        }
-        payload.DOGE = balanceDOGE.textContent;
-        if (balanceLTC.id === "LTC" && balanceLTC.id === submit.id) {
-          let currentBalance = +balanceLTC.textContent;
-          let result = currentBalance + +input.value - 0.5;
-          balanceLTC.textContent = result.toFixed(2);
-        }
-        payload.LTC = balanceLTC.textContent;
-        if (balanceSHIB.id === "SHIB" && balanceSHIB.id === submit.id) {
-          let currentBalance = +balanceSHIB.textContent;
-          let result = currentBalance + +input.value - 10;
-          balanceSHIB.textContent = result.toFixed(2);
-        }
-        payload.SHIB = balanceSHIB.textContent;
-        if (balanceRUR.id === "RUR" && balanceRUR.id === submit.id) {
-          let currentBalance = +balanceRUR.textContent;
-          let result = currentBalance + +input.value;
-          balanceRUR.textContent = result.toFixed(2);
-        }
-        payload.RUR = balanceRUR.textContent;
-        if (balanceBNB.id === "BNB" && balanceBNB.id === submit.id) {
-          let currentBalance = +balanceBNB.textContent;
-          let result = currentBalance + +input.value - 0.01;
-          balanceBNB.textContent = result.toFixed(2);
-        }
-        payload.BNB = balanceBNB.textContent;
+      cards.forEach((card) => {
+        if (card.classList.contains("current-currency-card")) {
+          let balance = card.children[0].childNodes[0].childNodes[1];
 
-        this.$store.dispatch("changeBalance", payload);
+          const input = document.querySelector(".form-add__input-value input");
+          if (balance.id === "BTS" || (balance.id === "USD" && balance.id === event.currentTarget.id)) {
+            balance.textContent = (+balance.textContent + +input.value - (input.value / 100) * 5).toFixed(2);
+          }
+
+          if (balance.id === "DOGE" || (balance.id === "LTC" && balance.id === event.currentTarget.id)) {
+            balance.textContent = (+balance.textContent + +input.value - 0.5).toFixed(2);
+          }
+
+          if (balance.id === "SHIB" && balance.id === event.currentTarget.id) {
+            balance.textContent = (+balance.textContent + +input.value - 10).toFixed(2);
+          }
+
+          if (balance.id === "RUR" && balance.id === event.currentTarget.id) {
+            balance.textContent = (+balance.textContent + +input.value).toFixed(2);
+          }
+
+          if (balance.id === "BNB" && balance.id === event.currentTarget.id) {
+            balance.textContent = (+balance.textContent + +input.value - 0.01).toFixed(2);
+          }
+        }
+
+        arrBalances.push(card.children[0].childNodes[0].childNodes[1].textContent);
       });
-    };
-    addToBalance();
 
-    const withdrawalFromBalance = () => {
-      const input = document.querySelector(".form-withdrawal__input-value input");
-      const submit = document.querySelector(".form-withdrawal__submit");
+      const payload = {
+        BTS: arrBalances[0],
+        USD: arrBalances[1],
+        DOGE: arrBalances[2],
+        LTC: arrBalances[3],
+        SHIB: arrBalances[4],
+        RUR: arrBalances[5],
+        BNB: arrBalances[6],
+      };
 
-      submit.addEventListener("click", () => {
-        let payload = {
-          BTS: 0,
-          USD: 0,
-          DOGE: 0,
-          LTC: 0,
-          SHIB: 0,
-          RUR: 0,
-          BNB: 0,
-        };
-        const balanceBTS = document.querySelector(".currency-balance#BTS");
-        const balanceUSD = document.querySelector(".currency-balance#USD");
-        const balanceDOGE = document.querySelector(".currency-balance#DOGE");
-        const balanceLTC = document.querySelector(".currency-balance#LTC");
-        const balanceSHIB = document.querySelector(".currency-balance#SHIB");
-        const balanceRUR = document.querySelector(".currency-balance#RUR");
-        const balanceBNB = document.querySelector(".currency-balance#BNB");
+      this.$store.dispatch("changeBalance", payload);
+    },
+    withdrawalFromBalance(event) {
+      const cards = document.querySelectorAll(".card-currency");
+      const arrBalances = [];
 
-        if (balanceBTS.id === "BTS" && balanceBTS.id === submit.id) {
-          let currentBalance = +balanceBTS.textContent;
-          let valueWithComission = +input.value - (input.value / 100) * 5;
-          if (currentBalance > valueWithComission) {
-            this.isErrorShow = false;
-            let result = currentBalance - valueWithComission;
-            balanceBTS.textContent = result.toFixed(2);
-          } else {
-            this.isErrorShow = true;
+      cards.forEach((card) => {
+        if (card.classList.contains("current-currency-card")) {
+          let balance = card.children[0].childNodes[0].childNodes[1];
+          const input = document.querySelector(".form-add__input-value input");
+
+          if (balance.id === "BTS" || (balance.id === "USD" && balance.id === event.currentTarget.id)) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - (input.value / 100) * 5;
+            if (currentBalance > valueWithComission) {
+              this.isErrorShow = false;
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(2);
+            } else {
+              this.isErrorShow = true;
+            }
+          }
+
+          if (balance.id === "DOGE" || (balance.id === "LTC" && balance.id === event.currentTarget.id)) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - 0.5;
+            if (currentBalance > valueWithComission) {
+              this.isErrorShow = false;
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(2);
+            } else {
+              this.isErrorShow = true;
+            }
+          }
+
+          if (balance.id === "SHIB" && balance.id === event.currentTarget.id) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - 10;
+            if (currentBalance > valueWithComission) {
+              this.isErrorShow = false;
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(2);
+            } else {
+              this.isErrorShow = true;
+            }
+          }
+
+          if (balance.id === "RUR" && balance.id === event.currentTarget.id) {
+            let currentBalance = +balance.textContent;
+            if (currentBalance > +input.value) {
+              this.isErrorShow = false;
+              let result = currentBalance - +input.value;
+              balance.textContent = result.toFixed(2);
+            } else {
+              this.isErrorShow = true;
+            }
+          }
+
+          if (balance.id === "BNB" && balance.id === event.currentTarget.id) {
+            let currentBalance = +balance.textContent;
+            let valueWithComission = +input.value - 0.01;
+            if (currentBalance > valueWithComission) {
+              this.isErrorShow = false;
+              let result = currentBalance - valueWithComission;
+              balance.textContent = result.toFixed(2);
+            } else {
+              this.isErrorShow = true;
+            }
           }
         }
-        payload.BTS = balanceBTS.textContent;
-
-        if (balanceUSD.id === "USD" && balanceUSD.id === submit.id) {
-          let currentBalance = +balanceUSD.textContent;
-          let valueWithComission = +input.value - (input.value / 100) * 5;
-          if (currentBalance > valueWithComission) {
-            this.isErrorShow = false;
-            let result = currentBalance - valueWithComission;
-            balanceUSD.textContent = result.toFixed(2);
-          } else {
-            this.isErrorShow = true;
-          }
-        }
-        payload.USD = balanceUSD.textContent;
-
-        if (balanceDOGE.id === "DOGE" && balanceDOGE.id === submit.id) {
-          let currentBalance = +balanceDOGE.textContent;
-          let valueWithComission = +input.value - 0.5;
-          if (currentBalance > valueWithComission) {
-            this.isErrorShow = false;
-            let result = currentBalance - valueWithComission;
-            balanceDOGE.textContent = result.toFixed(2);
-          } else {
-            this.isErrorShow = true;
-          }
-        }
-        payload.DOGE = balanceDOGE.textContent;
-
-        if (balanceLTC.id === "LTC" && balanceLTC.id === submit.id) {
-          let currentBalance = +balanceLTC.textContent;
-          let valueWithComission = +input.value - 0.5;
-          if (currentBalance > valueWithComission) {
-            this.isErrorShow = false;
-            let result = currentBalance - valueWithComission;
-            balanceLTC.textContent = result.toFixed(2);
-          } else {
-            this.isErrorShow = true;
-          }
-        }
-        payload.LTC = balanceLTC.textContent;
-
-        if (balanceSHIB.id === "SHIB" && balanceSHIB.id === submit.id) {
-          let currentBalance = +balanceSHIB.textContent;
-          let valueWithComission = +input.value - 10;
-          if (currentBalance > valueWithComission) {
-            this.isErrorShow = false;
-            let result = currentBalance - valueWithComission;
-            balanceSHIB.textContent = result.toFixed(2);
-          } else {
-            this.isErrorShow = true;
-          }
-        }
-        payload.SHIB = balanceSHIB.textContent;
-
-        if (balanceRUR.id === "RUR" && balanceRUR.id === submit.id) {
-          let currentBalance = +balanceRUR.textContent;
-          if (currentBalance > +input.value) {
-            this.isErrorShow = false;
-            let result = currentBalance - +input.value;
-            balanceRUR.textContent = result.toFixed(2);
-          } else {
-            this.isErrorShow = true;
-          }
-        }
-        payload.RUR = balanceRUR.textContent;
-
-        if (balanceBNB.id === "BNB" && balanceBNB.id === submit.id) {
-          let currentBalance = +balanceBNB.textContent;
-          let valueWithComission = +input.value - 0.01;
-          if (currentBalance > valueWithComission) {
-            this.isErrorShow = false;
-            let result = currentBalance - valueWithComission;
-            balanceBNB.textContent = result.toFixed(2);
-          } else {
-            this.isErrorShow = true;
-          }
-        }
-        payload.BNB = balanceBNB.textContent;
-
-        this.$store.dispatch("changeBalance", payload);
+        arrBalances.push(card.children[0].childNodes[0].childNodes[1].textContent);
       });
-    };
-    withdrawalFromBalance();
+
+      const payload = {
+        BTS: arrBalances[0],
+        USD: arrBalances[1],
+        DOGE: arrBalances[2],
+        LTC: arrBalances[3],
+        SHIB: arrBalances[4],
+        RUR: arrBalances[5],
+        BNB: arrBalances[6],
+      };
+
+      this.$store.dispatch("changeBalance", payload);
+    },
   },
 };
 </script>
