@@ -9,7 +9,12 @@
               <span
                 :id="card.currencyTitle"
                 :data-commission="card.currencyCommissionTitle"
-                class="currency-balance align-self-center text-h5 font-weight-bold"
+                class="
+                  currency-balance
+                  align-self-center
+                  text-h5
+                  font-weight-bold
+                "
                 >{{ card.currencyBalance }}</span
               >
             </div>
@@ -46,7 +51,14 @@
         </v-card>
       </v-col>
       <v-col cols="12">
-        <v-alert v-if="isErrorShow" dense elevation="6" prominent type="error">{{ errorWithdrawalMsg }}</v-alert>
+        <v-alert
+          v-if="isErrorShow"
+          dense
+          elevation="6"
+          prominent
+          type="error"
+          >{{ errorWithdrawalMsg }}</v-alert
+        >
       </v-col>
       <v-col v-show="isFormAddShow" cols="12">
         <form class="form-add form mb-15">
@@ -70,13 +82,29 @@
               ></v-alert>
             </v-col>
             <v-col sm="3" cols="12">
-              <v-alert color="orange" dense class="commission mb-0" elevation="3" type="warning"></v-alert>
+              <v-alert
+                color="orange"
+                dense
+                class="commission mb-0"
+                elevation="3"
+                type="warning"
+              ></v-alert>
             </v-col>
             <v-col cols="12">
-              <v-textarea rows="1" row-height="15" filled label="Комментарий"></v-textarea>
+              <v-textarea
+                rows="1"
+                row-height="15"
+                filled
+                label="Комментарий"
+              ></v-textarea>
             </v-col>
             <v-col cols="12">
-              <v-btn @click="addToBalance" class="form-add__submit form-btn mr-4"> Ввести </v-btn>
+              <v-btn
+                @click="addToBalance"
+                class="form-add__submit form-btn mr-4"
+              >
+                Ввести
+              </v-btn>
               <v-btn @click="closeForm"> Закрыть </v-btn>
             </v-col>
           </v-row>
@@ -104,19 +132,45 @@
               ></v-alert>
             </v-col>
             <v-col sm="3" cols="12">
-              <v-alert color="orange" dense class="commission mb-0" elevation="3" type="warning"></v-alert>
+              <v-alert
+                color="orange"
+                dense
+                class="commission mb-0"
+                elevation="3"
+                type="warning"
+              ></v-alert>
             </v-col>
             <v-col v-if="isCrypto" cols="12">
-              <v-text-field solo v-model="address" label="Адрес" required></v-text-field>
+              <v-text-field
+                solo
+                v-model="address"
+                label="Адрес"
+                required
+              ></v-text-field>
             </v-col>
             <v-col v-if="isFiat" cols="12">
-              <v-text-field solo v-model="requisites" label="Реквизиты" required></v-text-field>
+              <v-text-field
+                solo
+                v-model="requisites"
+                label="Реквизиты"
+                required
+              ></v-text-field>
             </v-col>
             <v-col cols="12">
-              <v-textarea rows="1" row-height="15" filled label="Комментарий"></v-textarea>
+              <v-textarea
+                rows="1"
+                row-height="15"
+                filled
+                label="Комментарий"
+              ></v-textarea>
             </v-col>
             <v-col cols="12">
-              <v-btn @click="withdrawalFromBalance" class="form-withdrawal__submit form-btn mr-4"> Вывести </v-btn>
+              <v-btn
+                @click="withdrawalFromBalance"
+                class="form-withdrawal__submit form-btn mr-4"
+              >
+                Вывести
+              </v-btn>
               <v-btn @click="closeForm"> Закрыть </v-btn>
             </v-col>
           </v-row>
@@ -217,10 +271,13 @@ export default {
       cards.forEach((card) =>
         event.currentTarget.id === card.id
           ? card.classList.add("current-currency-card")
-          : card.classList.remove("current-currency-card"),
+          : card.classList.remove("current-currency-card")
       );
 
-      if (event.currentTarget.id === "USD" || event.currentTarget.id === "RUR") {
+      if (
+        event.currentTarget.id === "USD" ||
+        event.currentTarget.id === "RUR"
+      ) {
         this.isFiat = true;
         this.isCrypto = false;
       } else {
@@ -232,7 +289,10 @@ export default {
 
       submits.forEach((submit) => (submit.id = event.currentTarget.id));
 
-      allCommissions.forEach((el) => (el.textContent = `Коммиссия: ${event.currentTarget.dataset.commissionValue}`));
+      allCommissions.forEach(
+        (el) =>
+          (el.textContent = `Коммиссия: ${event.currentTarget.dataset.commissionValue}`)
+      );
     },
     closeForm() {
       this.isFormAddShow = false;
@@ -241,7 +301,9 @@ export default {
     },
     validateInput(inputValue) {
       const form = document.querySelector(".form-add");
-      const inputValueError = document.querySelector(".input-value-error .v-alert__content");
+      const inputValueError = document.querySelector(
+        ".input-value-error .v-alert__content"
+      );
       const submitBtn = document.querySelector(".form-add__submit");
 
       const regex = /^[0-9]*\.?[0-9]*$/;
@@ -305,28 +367,54 @@ export default {
           let balance = card.children[0].childNodes[0].childNodes[1];
 
           const input = document.querySelector(".form-add__input-value input");
-          if (balance.id === "BTS" || (balance.id === "USD" && balance.id === event.currentTarget.id)) {
-            balance.textContent = (+balance.textContent + +input.value - (input.value / 100) * 5).toFixed(2);
+          if (
+            balance.id === "BTS" ||
+            (balance.id === "USD" && balance.id === event.currentTarget.id)
+          ) {
+            balance.textContent = (
+              +balance.textContent +
+              +input.value -
+              (input.value / 100) * 5
+            ).toFixed(2);
           }
 
-          if (balance.id === "DOGE" || (balance.id === "LTC" && balance.id === event.currentTarget.id)) {
-            balance.textContent = (+balance.textContent + +input.value - 0.5).toFixed(2);
+          if (
+            balance.id === "DOGE" ||
+            (balance.id === "LTC" && balance.id === event.currentTarget.id)
+          ) {
+            balance.textContent = (
+              +balance.textContent +
+              +input.value -
+              0.5
+            ).toFixed(2);
           }
 
           if (balance.id === "SHIB" && balance.id === event.currentTarget.id) {
-            balance.textContent = (+balance.textContent + +input.value - 10).toFixed(2);
+            balance.textContent = (
+              +balance.textContent +
+              +input.value -
+              10
+            ).toFixed(2);
           }
 
           if (balance.id === "RUR" && balance.id === event.currentTarget.id) {
-            balance.textContent = (+balance.textContent + +input.value).toFixed(2);
+            balance.textContent = (+balance.textContent + +input.value).toFixed(
+              2
+            );
           }
 
           if (balance.id === "BNB" && balance.id === event.currentTarget.id) {
-            balance.textContent = (+balance.textContent + +input.value - 0.01).toFixed(2);
+            balance.textContent = (
+              +balance.textContent +
+              +input.value -
+              0.01
+            ).toFixed(2);
           }
         }
 
-        arrBalances.push(card.children[0].childNodes[0].childNodes[1].textContent);
+        arrBalances.push(
+          card.children[0].childNodes[0].childNodes[1].textContent
+        );
       });
 
       const payload = {
@@ -350,7 +438,10 @@ export default {
           let balance = card.children[0].childNodes[0].childNodes[1];
           const input = document.querySelector(".form-add__input-value input");
 
-          if (balance.id === "BTS" || (balance.id === "USD" && balance.id === event.currentTarget.id)) {
+          if (
+            balance.id === "BTS" ||
+            (balance.id === "USD" && balance.id === event.currentTarget.id)
+          ) {
             let currentBalance = +balance.textContent;
             let valueWithComission = +input.value - (input.value / 100) * 5;
             if (currentBalance > valueWithComission) {
@@ -362,7 +453,10 @@ export default {
             }
           }
 
-          if (balance.id === "DOGE" || (balance.id === "LTC" && balance.id === event.currentTarget.id)) {
+          if (
+            balance.id === "DOGE" ||
+            (balance.id === "LTC" && balance.id === event.currentTarget.id)
+          ) {
             let currentBalance = +balance.textContent;
             let valueWithComission = +input.value - 0.5;
             if (currentBalance > valueWithComission) {
@@ -409,7 +503,9 @@ export default {
             }
           }
         }
-        arrBalances.push(card.children[0].childNodes[0].childNodes[1].textContent);
+        arrBalances.push(
+          card.children[0].childNodes[0].childNodes[1].textContent
+        );
       });
 
       const payload = {
