@@ -44,7 +44,7 @@
                 contain
                 max-height="60"
                 max-width="60"
-                :src="require(`@/assets/${card.currencyTitle}.svg`)"
+                :src="require(`@/assets/${card.id}.svg`)"
               ></v-img>
             </div>
           </div>
